@@ -42,9 +42,18 @@ enemy_x_pos = random.randint(0, screen_width - enemy_width)
 enemy_y_pos = 0
 enemy_speed = 10
 
+#폰트
+game_font = pygame.font.Font(None, 30) 
+
+total_time = 30 #총 시간
+
+start_ticks = pygame.time.get_ticks() #시작 시간
+
 running = True # 게임이 진행중인가?
 while running:
     dt = clock.tick(60) #초당 프레임 수 설정
+    
+    print("fps : " + str(clock.get_fps()))
 
     #2. 이벤트 처리(키보드, 마우스 등)
     for event in pygame.event.get(): #게임이 진행되도록 체크하는 것
@@ -95,8 +104,23 @@ while running:
     screen.blit(sheep, (sheep_x_pos, sheep_y_pos)) #캐릭터 그리기
     screen.blit(enemy, (enemy_x_pos, enemy_y_pos))
 
+    #타이머
+    elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000
+   
+    #출력할 글자, true, 글자 색
+    timer = game_font.render(str(int(total_time - elapsed_time)), True,(255,255,255))
+
+    screen.blit(timer,(10,10))
+
+    #만약 시간이 0이하면 게임 종료
+    if total_time - elapsed_time <= 0:
+        print("MISSION COMPLETE")
+        running = False
 
     pygame.display.update() #게임화면 다시 그리기
-  
+
+#잠시 대기
+pygame.time.delay(1000) #초
+ 
 #게임 종료
 pygame.quit()
